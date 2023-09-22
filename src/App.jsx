@@ -1,37 +1,42 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
-import Game from './components/Game'
 import Welcome from './components/Welcome'
+import Game from './components/Game'
 import Result from './components/Result'
 
-
 function App() {
-
-  const WELCOME = 'welome', GAME = 'game', RESULT = 'result';
+  const WELCOME = 'welcome', GAME = 'game', RESULT = 'result';
   const [currentScreen, setCurrentScreen] = useState(WELCOME);
-  
+  const [score, setScore] = useState(0);
+
   let content = null;
 
-  switch(currentScreen){
-    case WELCOME : 
-    content = <Welcome nextScreen={() => setCurrentScreen(GAME)} />;
-    break;
+const restartQuiz = () => {
+  setScore(0);
+  setCurrentScreen(WELCOME);
+}
+
+
+  switch(currentScreen) {
+    case WELCOME :
+      content = <Welcome nextScreen={() => setCurrentScreen(GAME) }/>;
+      break;
     case GAME : 
-    content = <Game />;
-    break;
+      content = <Game answeredCorrectly={() => setScore(score + 1) } showResult={() => setCurrentScreen(RESULT)}/>;
+      break;
     case RESULT : 
-    content = <Result nextScreen={() => setCurrentScreen(GAME)} />;
-    break;
-    default:
-      content = <Welcome />;
+      content = <Result score={score} restartQuiz={restartQuiz}/>
+      break;
+    default: 
+      content = <Welcome />
   }
 
   return (
       <div>
-      {content}
-      </div>
+       {content}
+     </div>
   )
 }
 
